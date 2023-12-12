@@ -40,3 +40,34 @@ const changeDirection = e => {
         velocityY = 0;
     }
 }
+
+controls.forEach(button => button.addEventListener("click", () => changeDirection({ key: button.dataset.key })));
+
+const initGame = () => {
+    if(gameOver) return handleGameOver();
+    let html = `<div class="food" style="grid-area: ${foodY} / ${foodX}"></div>`;
+
+    if (snakeX === foodX && snakeY === foodY) {
+        updateFoodPosition();
+        snakeBody.push([foodY, foodX]);
+        score++;
+        highScore = score >= highScore ? score : highScore;
+
+        localStorage.setItem("high-score", highScore);
+        scoreElement.innerText = `Score: ${score}`;
+        highScoreElement.innerText = `High Score: ${highScore}`;
+    }
+
+    snakeX = velocityX;
+    snakeY = velocityY;
+
+    for (let i = snakeBody.length - 1; i > 0; i--) {
+        snakeBody[i] = snakeBody[i - 1];
+    }
+
+    snakeBody[0] = [snakeX, snakeY];
+
+    if (snakeX <= 0 || snakeX > 30 || snakeY <= 0 || snakeY > 30) {
+        return gameOver = true;
+    }
+}
