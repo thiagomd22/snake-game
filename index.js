@@ -11,8 +11,10 @@ let snakeBody = [];
 let setIntervalId;
 let score = 0;
 
+
 let highScore = localStorage.getItem("high-score") || 0;
 highScoreElement.innerText = `High Score: ${highScore}`;
+
 
 const updateFoodPosition = () => {
     foodX = Math.floor(Math.random() * 30) + 1;
@@ -24,6 +26,7 @@ const handleGameOver = () => {
     alert("Game Over! Press OK to replay...");
     location.reload();
 }
+
 
 const changeDirection = e => {
     if (e.key === "ArrowUp" && velocityY != 1) {
@@ -41,25 +44,27 @@ const changeDirection = e => {
     }
 }
 
+
+
 controls.forEach(button => button.addEventListener("click", () => changeDirection({ key: button.dataset.key })));
 
 const initGame = () => {
-    if(gameOver) return handleGameOver();
+    if (gameOver) return handleGameOver();
     let html = `<div class="food" style="grid-area: ${foodY} / ${foodX}"></div>`;
 
+    
     if (snakeX === foodX && snakeY === foodY) {
         updateFoodPosition();
-        snakeBody.push([foodY, foodX]);
+        snakeBody.push([foodY, foodX]); 
         score++;
-        highScore = score >= highScore ? score : highScore;
-
+        highScore = score >= highScore ? score : highScore; 
         localStorage.setItem("high-score", highScore);
         scoreElement.innerText = `Score: ${score}`;
         highScoreElement.innerText = `High Score: ${highScore}`;
     }
 
-    snakeX = velocityX;
-    snakeY = velocityY;
+    snakeX += velocityX;
+    snakeY += velocityY;
 
     for (let i = snakeBody.length - 1; i > 0; i--) {
         snakeBody[i] = snakeBody[i - 1];
@@ -73,7 +78,7 @@ const initGame = () => {
 
     for (let i = 0; i < snakeBody.length; i++) {
         html += `<div class="head" style="grid-area: ${snakeBody[i][1]} / ${snakeBody[i][0]}"></div>`;
-
+        
         if (i !== 0 && snakeBody[0][1] === snakeBody[i][1] && snakeBody[0][0] === snakeBody[i][0]) {
             gameOver = true;
         }
